@@ -9,7 +9,7 @@ audioSrc.connect(analyser);
 audioSrc.connect(audioCtx.destination);
 
 
-var frequencyData = new Uint8Array(400);
+var frequencyData = new Uint8Array(500);
 
 var svgHeight = 400;
 var svgWidth = 3000;
@@ -32,7 +32,13 @@ svgUP.selectAll('rect')
   .attr('x', function(d, i) {
     return i * (svgWidth / frequencyData.length);
   })
-  .attr('width', (svgWidth / frequencyData.length - barPadding));
+  .attr('width', (svgWidth / frequencyData.length - barPadding))
+  .attr('height', function(d) {
+    return 1;
+  })
+  .attr('fill', function(d, i) {
+    return d3.hsl(i*3, 1, 0.5) + "";
+  });
 
 svgDown.selectAll('rect')
   .data(frequencyData)
@@ -42,7 +48,13 @@ svgDown.selectAll('rect')
   .attr('x', function(d, i) {
     return i * (svgWidth / frequencyData.length);
   })
-  .attr('width', svgWidth / frequencyData.length - barPadding);
+  .attr('width', svgWidth / frequencyData.length - barPadding)
+  .attr('height', function(d) {
+    return 1;
+  })
+  .attr('fill', function(d, i) {
+    return d3.hsl(i*3, 1, 0.5) + "";
+  });
 
 console.log(analyser)
 
@@ -55,27 +67,21 @@ function renderChart() {
   // Update d3 chart with new data.
   svgUP.selectAll('.up')
     .data(frequencyData)
+    .transition()
+    .duration(10)
     .attr('y', function(d) {
       return svgHeight-d;
     })
-    .attr('height', function(d) {
-      return 1;
-    })
-    .attr('fill', function(d, i) {
-      return d3.hsl(i*3, 1, 0.5) + "";
-    });
+
 
   svgDown.selectAll('.down')
     .data(frequencyData)
+    .transition()
+    .duration(10)
     .attr('y', function(d) {
       return d;
     })
-    .attr('height', function(d) {
-      return 1;
-    })
-    .attr('fill', function(d, i) {
-      return d3.hsl(i*3, 1, 0.5) + "";
-    });
+
 
     requestAnimationFrame(renderChart);
 }
