@@ -21,24 +21,10 @@ function createSvg(parent, height, width) {
 
 var svgUP = createSvg('body', 400, 1910);
 var svgDown = createSvg('body', 500, 1910)
-              .style('background','linear-gradient(grey,black 17%)');
+              .style('background','linear-gradient(rgba(117, 111, 111, 0.10), rgba(0,0,0,0) 17%');
 var x1, x2, y1, y2;
 // Create our initial D3 chart.
-svgUP.selectAll('rect')
-  .data(frequencyData)
-  .enter()
-  .append('rect')
-  .attr('class','up')
-  .attr('x', function(d, i) {
-    return i * (svgWidth / frequencyData.length);
-  })
-  .attr('width', (svgWidth / frequencyData.length - barPadding))
-  .attr('height', function(d) {
-    return 1;
-  })
-  .attr('fill', function(d, i) {
-    return d3.hsl(i*3, 1, 0.5) + "";
-  });
+
 
 svgDown.selectAll('rect')
   .data(frequencyData)
@@ -53,17 +39,63 @@ svgDown.selectAll('rect')
     return 1;
   })
   .attr('fill', function(d, i) {
-    return d3.hsl(i*3, 1, 0.5) + "";
+    return d3.hsl(i*3, 0.3, 0.5) + "";
   });
+
+  svgUP.selectAll('rect')
+    .data(frequencyData)
+    .enter()
+    .append('rect')
+    .attr('class','up')
+    .attr('x', function(d, i) {
+      return i * (svgWidth / frequencyData.length);
+    })
+    .attr('width', (svgWidth / frequencyData.length - barPadding))
+    .attr('height', function(d) {
+      return 1;
+    })
+    .attr('fill', function(d, i) {
+      return d3.hsl(i*3, 1, 0.5) + "";
+    });
 
 console.log(analyser)
 
 // Continuously loop and update chart with frequency data.
-function renderChart() {
+  function renderChart() {
   // Copy frequency data to frequencyData array.
   analyser.getByteFrequencyData(frequencyData);
 
+  svgUP.selectAll('rect')
+    .data(frequencyData)
+    .enter()
+    .append('rect')
+    .attr('class','up')
+    .attr('x', function(d, i) {
+      return i * (svgWidth / frequencyData.length);
+    })
+    .attr('width', (svgWidth / frequencyData.length - barPadding))
+    .attr('height', function(d) {
+      return d;
+    })
+    .attr('fill', function(d, i) {
+      return d3.hsl(i*3, 1, 0.5) + "";
+    });
 
+  svgDown.selectAll('rect')
+    .data(frequencyData)
+    .enter()
+    .append('rect')
+    .attr('class','down')
+    .attr('x', function(d, i) {
+      return i * (svgWidth / frequencyData.length);
+    })
+    .attr('width', svgWidth / frequencyData.length - barPadding)
+    .attr('height', function(d) {
+      return d;
+    })
+    .attr('fill', function(d, i) {
+      return d3.hsl(i*3, 0.5, 0.5) + "";
+    });
   // Update d3 chart with new data.
   svgUP.selectAll('.up')
     .data(frequencyData)
